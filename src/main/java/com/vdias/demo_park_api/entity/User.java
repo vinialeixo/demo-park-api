@@ -11,7 +11,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Getter @Setter @NoArgsConstructor @AllArgsConstructor
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "users")
 public class User implements Serializable {
@@ -25,10 +28,11 @@ public class User implements Serializable {
 
     @Column(name = "password", nullable = false, length = 200)
     private String password;
-    
+
     @Column(name = "role", nullable = false, length = 25)
-    private Role role;
+
     @Enumerated(EnumType.STRING)
+    private Role role;
 
     private LocalDateTime createdOn;
     private LocalDateTime updateOn;
