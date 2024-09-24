@@ -1,7 +1,6 @@
 package com.vdias.demo_park_api.web.dto.mapper;
 
 import java.util.List;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;

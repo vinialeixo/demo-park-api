@@ -2,10 +2,13 @@ package com.vdias.demo_park_api.service;
 
 import java.util.List;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.vdias.demo_park_api.entity.User;
+import com.vdias.demo_park_api.exception.EntityNotFoundException;
+import com.vdias.demo_park_api.exception.UsernameUniqueViolationException;
 import com.vdias.demo_park_api.repository.UserRepository;
 import com.vdias.demo_park_api.web.dto.UserPasswordDto;
 
@@ -21,14 +24,18 @@ public class UserService {
     @Transactional
 
     public User save(User user) {
-        return userRepository.save(user);
+        try {
+            return userRepository.save(user);
+            
+        } catch (org.springframework.dao.DataIntegrityViolationException ex) {
+            throw new UsernameUniqueViolationException(String.format("Usernmae {%s} is already cadastrer",user.getUsername()));
+        }
     }
 
     @Transactional(readOnly = true)
     public User searchById(Long id) {
         return userRepository.findById(id).orElseThrow(
-            () -> new RuntimeException("User not found")
-        );
+                () -> new EntityNotFoundException(String.format("User id=%s not found.", id)));
     }
 
     @Transactional

@@ -14,11 +14,11 @@ import lombok.ToString;
 public class UserCreateDto {
 
     @NotBlank
-    @PositiveOrZero
     @Email(message = "formato do e-mail está invalido")
     private String username;
     
     @NotBlank
+    @PositiveOrZero
     @Size(min = 6, max = 6)
     private String password;
 
