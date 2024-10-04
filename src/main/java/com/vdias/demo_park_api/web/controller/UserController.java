@@ -21,6 +21,7 @@ import com.vdias.demo_park_api.web.dto.mapper.UserMapper;
 import com.vdias.demo_park_api.web.exception.ErrorMessage;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -46,18 +47,30 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(UserMapper.toDto(userResponse));
     }
 
+    @Operation(summary = "recuperar um usuário por id", responses = {
+            @ApiResponse(responseCode = "200", description = "recursos recuperado com sucesso", content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserResponseDto.class))),
+            @ApiResponse(responseCode = "404", description = "Recursos não encontrado", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class)))
+    })
     @GetMapping("/{id}")
     public ResponseEntity<UserResponseDto> getById(@PathVariable Long id) {
         User userResponse = userService.searchById(id);
         return ResponseEntity.status(HttpStatus.OK).body(UserMapper.toDto(userResponse));
     }
 
+    @Operation(summary = "atualizar senha ", responses = {
+            @ApiResponse(responseCode = "204", description = "Senha atualizada com sucesso", content = @Content(mediaType = "application/json", schema = @Schema(implementation = void.class))),
+            @ApiResponse(responseCode = "400", description = "Senha não confere", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))),
+            @ApiResponse(responseCode = "404", description = "Recursos não encontrado", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class)))
+    })
     @PatchMapping("/{id}")
     public ResponseEntity<Void> updatePassword(@PathVariable Long id, @Valid @RequestBody UserPasswordDto dto) {
         User userResponse = userService.editPassword(id, dto);
         return ResponseEntity.noContent().build();
     }
 
+    @Operation(summary = "recuperar todos os usuarios ", responses = {
+            @ApiResponse(responseCode = "200", description = "recursos recuperado com sucesso", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = UserResponseDto.class)))),
+    })
     @GetMapping("")
     public ResponseEntity<List<UserResponseDto>> getAll() {
         List<User> users = userService.getAll();
